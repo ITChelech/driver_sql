@@ -1,0 +1,99 @@
+{
+  "name": "driver_sql",
+  "version": "0.1.0",
+  "description": "Small TypeScript SQL helper for table models, queries and SQL Server drivers.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./columns": {
+      "types": "./dist/columns.d.ts",
+      "import": "./dist/columns.js"
+    },
+    "./compiler": {
+      "types": "./dist/compiler.d.ts",
+      "import": "./dist/compiler.js"
+    },
+    "./date-time": {
+      "types": "./dist/date-time.d.ts",
+      "import": "./dist/date-time.js"
+    },
+    "./diagram": {
+      "types": "./dist/diagram.d.ts",
+      "import": "./dist/diagram.js"
+    },
+    "./driver": {
+      "types": "./dist/driver.d.ts",
+      "import": "./dist/driver.js"
+    },
+    "./live": {
+      "types": "./dist/live.d.ts",
+      "import": "./dist/live.js"
+    },
+    "./metadata": {
+      "types": "./dist/metadata.d.ts",
+      "import": "./dist/metadata.js"
+    },
+    "./operators": {
+      "types": "./dist/operators.d.ts",
+      "import": "./dist/operators.js"
+    },
+    "./query": {
+      "types": "./dist/query.d.ts",
+      "import": "./dist/query.js"
+    },
+    "./relations": {
+      "types": "./dist/relations.d.ts",
+      "import": "./dist/relations.js"
+    },
+    "./schema-sync": {
+      "types": "./dist/schema-sync.d.ts",
+      "import": "./dist/schema-sync.js"
+    },
+    "./table": {
+      "types": "./dist/table.d.ts",
+      "import": "./dist/table.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js"
+    },
+    "./where": {
+      "types": "./dist/where.d.ts",
+      "import": "./dist/where.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepack": "bun run build"
+  },
+  "keywords": [
+    "sql",
+    "mssql",
+    "typescript",
+    "query-builder"
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "peerDependencies": {
+    "mssql": "^12.5.5"
+  },
+  "peerDependenciesMeta": {
+    "mssql": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.3"
+  }
+}
