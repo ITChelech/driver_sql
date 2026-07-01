@@ -85,7 +85,7 @@
   "license": "MIT",
   "sideEffects": false,
   "peerDependencies": {
-    "mssql": "^12.5.5"
+    "mssql": ""
   },
   "peerDependenciesMeta": {
     "mssql": {
