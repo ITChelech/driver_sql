@@ -5,11 +5,11 @@
     "": {
       "name": "driver_sql",
       "devDependencies": {
-        "@types/node": "^24.0.0",
+        "@types/node": "^24.13.2",
         "typescript": "^5.9.3",
       },
       "peerDependencies": {
-        "mssql": "",
+        "mssql": "12.6.0",
       },
       "optionalPeers": [
         "mssql",

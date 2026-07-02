@@ -85,7 +85,7 @@
   "license": "MIT",
   "sideEffects": false,
   "peerDependencies": {
-    "mssql": ""
+    "mssql": "12.6.0"
   },
   "peerDependenciesMeta": {
     "mssql": {
@@ -93,7 +93,7 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^24.0.0",
+    "@types/node": "^24.13.2",
     "typescript": "^5.9.3"
   }
 }

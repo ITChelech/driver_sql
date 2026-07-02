@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import type { CompiledSql, RecordShape, SqlDriver, TableStatic } from "./types.js";
 
 let defaultDriver: SqlDriver | undefined;
@@ -30,6 +31,10 @@ type MssqlPool = {
       rowsAffected: number[];
     }>;
   };
+};
+
+type MssqlModule = {
+  ConnectionPool: new (config: MssqlConfig) => MssqlPool;
 };
 
 /** Sets the driver used by table models that do not define their own driver. */
@@ -171,8 +176,8 @@ export class MssqlDriver implements SqlDriver {
   private getPool(): Promise<MssqlPool> {
     if (!this.poolPromise) {
       if (!this.config) throw new Error("No SQL pool configured");
-      this.poolPromise = import("mssql").then(({ default: mssql }) => {
-        const ConnectionPool = mssql.ConnectionPool as new (config: MssqlConfig) => MssqlPool;
+      this.poolPromise = importMssql().then(mssql => {
+        const ConnectionPool = mssql.ConnectionPool;
         return new ConnectionPool(this.config as MssqlConfig).connect();
       });
     }
@@ -186,6 +191,41 @@ export class MssqlDriver implements SqlDriver {
     const pool = await current?.catch(() => null);
     await pool?.close?.().catch(() => {});
   }
+}
+
+async function importMssql(): Promise<MssqlModule> {
+  try {
+    const imported = await import("mssql");
+    return normalizeMssqlModule(imported);
+  } catch (error) {
+    try {
+      const requireFromApp = createRequire(`${process.cwd()}/package.json`);
+      return normalizeMssqlModule(requireFromApp("mssql"));
+    } catch {
+      throw error;
+    }
+  }
+}
+
+function normalizeMssqlModule(value: unknown): MssqlModule {
+  const candidate = (
+    value &&
+    typeof value === "object" &&
+    "default" in value &&
+    (value as { default?: unknown }).default
+  )
+    ? (value as { default: unknown }).default
+    : value;
+
+  if (
+    !candidate ||
+    typeof candidate !== "object" ||
+    !("ConnectionPool" in candidate)
+  ) {
+    throw new Error("The mssql package did not expose ConnectionPool");
+  }
+
+  return candidate as MssqlModule;
 }
 
 /** Wraps another driver and only allows SELECT or WITH queries. */
@@ -287,8 +327,8 @@ export function createRandomMssqlConfigFromEnv(
 
 /** Creates the configured SQL Server database if it does not exist yet. */
 export async function ensureMssqlDatabaseExists(config: MssqlConfig): Promise<void> {
-  const { default: mssql } = await import("mssql");
-  const ConnectionPool = mssql.ConnectionPool as new (config: MssqlConfig) => MssqlPool;
+  const mssql = await importMssql();
+  const ConnectionPool = mssql.ConnectionPool;
   const adminPool = await new ConnectionPool({
     ...config,
     database: "master",
